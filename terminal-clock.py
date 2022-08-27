@@ -19,6 +19,11 @@ SYMBOL = {
     ":": ' \n.\n.'
 }
 
+def resize_window():
+    try:
+        os.system(f'mode con: cols={LENGTH+1} lines=7')
+    except: pass
+
 def clear_output():
     os.system('cls' if os.name == 'nt' else 'clear') 
 
@@ -42,14 +47,20 @@ heads = headlines()
 index_init = heads.find("|", randint(0,len(heads)))
 teleprom = telepromter(0,heads[index_init:])
 
+def telepromt():
+    index = int(time.time()*5) % len(heads)
+    return heads[index:index+LENGTH]
+
 def main():
     clear_output()
     print("the terminal clock  v"+VERSION)
     printer(hour_parser())
     print()
-    print(next(teleprom))
+    # print(next(teleprom))
+    print(telepromt())
     time.sleep(0.25)
 
 if __name__ == '__main__':
+    resize_window()
     while True:
         main()
