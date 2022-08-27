@@ -1,9 +1,10 @@
+from random import randint
 import time
 import os
+from modules.newsheadlines import headlines, LENGTH
 
-
+VERSION = "1.0.0"
 ROWS = 3
-
 SYMBOL = {
     "0": ' __ \n|  |\n|__|',
     "1": '    \n   |\n   |',
@@ -30,11 +31,25 @@ def hour_parser():
     def hour(): return time.strftime("%H:%M:%S",time.localtime())
     return [SYMBOL[i] for i in hour()]
 
-def clock():
+def telepromter(i,h):
+    if len(h) < i+LENGTH:
+        i = 0
+        h = headlines()[:35]
+    yield h[i:i+LENGTH]
+    yield from telepromter(i+1,h)
+
+heads = headlines()
+index_init = heads.find("|", randint(0,len(heads)))
+teleprom = telepromter(0,heads[index_init:])
+
+def main():
     clear_output()
+    print("the terminal clock  v"+VERSION)
     printer(hour_parser())
-    time.sleep(1)
+    print()
+    print(next(teleprom))
+    time.sleep(0.25)
 
 if __name__ == '__main__':
     while True:
-        clock()
+        main()
