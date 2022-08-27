@@ -2,6 +2,12 @@ from random import randint
 import time
 import os
 from modules.newsheadlines import headlines, LENGTH
+from modules.office import title_printer, theoffice
+
+from format import format, bcolors
+
+X = LENGTH+1
+Y = 9
 
 VERSION = "1.0.0"
 ROWS = 3
@@ -21,7 +27,7 @@ SYMBOL = {
 
 def resize_window():
     try:
-        os.system(f'mode con: cols={LENGTH+1} lines=7')
+        os.system(f'mode con: cols={X} lines={Y}')
     except: pass
 
 def clear_output():
@@ -44,20 +50,22 @@ def telepromter(i,h):
     yield from telepromter(i+1,h)
 
 heads = headlines()
-index_init = heads.find("|", randint(0,len(heads)))
-teleprom = telepromter(0,heads[index_init:])
+# index_init = heads.find("|", randint(0,len(heads)))
+# teleprom = telepromter(0,heads[index_init:])
 
-def telepromt():
+def telepromt(heads):
     index = int(time.time()*5) % len(heads)
     return heads[index:index+LENGTH]
 
 def main():
     clear_output()
-    print("the terminal clock  v"+VERSION)
+    format("the terminal clock  v"+VERSION, bcolors.HEADER)
     printer(hour_parser())
     print()
     # print(next(teleprom))
-    print(telepromt())
+    format(telepromt(heads), bcolors.WARNING)
+    format(title_printer(theoffice), bcolors.BOLD)
+    print(telepromt(theoffice[0]['script']))
     time.sleep(0.25)
 
 if __name__ == '__main__':
